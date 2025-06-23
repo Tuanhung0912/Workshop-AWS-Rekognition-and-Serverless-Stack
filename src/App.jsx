@@ -23,6 +23,7 @@ import ResultViewer from './components/ResultViewer'
 import Header from './components/Header'
 import getTheme from './theme'
 import { ThemeProvider as CustomThemeProvider, useTheme } from './contexts/ThemeContext'
+import Footer from './components/Footer'
 
 const VisuallyHiddenInput = styled('input')`
   clip: rect(0 0 0 0);
@@ -377,6 +378,7 @@ const AppContent = () => {
             {error}
           </Alert>
         </Snackbar>
+        <Footer />
       </Box>
     </MuiThemeProvider>
   )
