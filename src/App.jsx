@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import {
   Box,
@@ -125,6 +125,14 @@ const AppContent = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [leftHeight, setLeftHeight] = useState(undefined);
+  const leftBoxRef = useRef();
+
+  useEffect(() => {
+    if (leftBoxRef.current) {
+      setLeftHeight(leftBoxRef.current.offsetHeight);
+    }
+  }, [preview, image, loading]);
 
   const handleChange = (e) => {
     const file = e.target.files?.[0]
@@ -201,35 +209,43 @@ const AppContent = () => {
         minHeight: '100vh',
         bgcolor: 'background.default',
         transition: 'background-color 0.3s ease',
-        maxWidth: '100vw',
-        overflowX: 'hidden',
+        width: '100vw',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
       }}>
         <Header />
-        
         <Box
           sx={{
+            flex: 1,
             display: 'flex',
-            flexDirection: showSideBySide ? 'row' : 'column',
-            minHeight: 'calc(100vh - 70px)',
-            position: 'relative',
-            maxWidth: '100vw',
-            overflowX: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: '100%',
+            py: { xs: 2, md: 6 },
+            boxSizing: 'border-box',
+            gap: { xs: 3, md: 6 },
+            flexDirection: { xs: 'column', md: 'row' },
           }}
         >
           {/* Left: Upload/Preview/Buttons */}
           <Box
+            ref={leftBoxRef}
             sx={{
-              flex: showSideBySide ? '0 0 50%' : '1 1 100%',
-              p: { xs: 2, sm: 3, md: 4 },
+              maxWidth: 480,
+              width: '100%',
+              boxSizing: 'border-box',
+              background: 'rgba(255,255,255,0.08)',
+              borderRadius: 4,
+              boxShadow: 3,
+              minHeight: 420,
               display: 'flex',
               flexDirection: 'column',
-              borderRight: showSideBySide ? 1 : 0,
-              borderBottom: !showSideBySide ? 1 : 0,
-              borderColor: 'divider',
-              justifyContent: 'center',
               alignItems: 'center',
-              maxWidth: '100vw',
-              boxSizing: 'border-box',
+              justifyContent: 'center',
+              p: { xs: 2, sm: 3, md: 4 },
+              mb: { xs: 3, md: 0 },
             }}
           >
             <Typography
@@ -324,18 +340,22 @@ const AppContent = () => {
           </Box>
 
           {/* Right: ResultViewer (only show if image is selected) */}
-          {preview && (
+          {image && (
             <Box
               sx={{
-                flex: '0 0 50%',
-                p: { xs: 2, sm: 3, md: 4 },
+                maxWidth: 480,
+                width: '100%',
+                boxSizing: 'border-box',
+                background: 'rgba(255,255,255,0.08)',
+                borderRadius: 4,
+                boxShadow: 3,
+                minHeight: 420,
+                height: leftHeight ? leftHeight : 'auto',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center',
                 alignItems: 'center',
-                minHeight: isMobile ? 300 : 'auto',
-                maxWidth: '100vw',
-                boxSizing: 'border-box',
+                justifyContent: 'center',
+                p: { xs: 2, sm: 3, md: 4 },
               }}
             >
               <Typography
@@ -351,7 +371,7 @@ const AppContent = () => {
               >
                 Results
               </Typography>
-              <Box sx={{ width: '100%', maxWidth: 420, flex: 1, maxWidth: '100%' }}>
+              <Box sx={{ width: '100%', maxWidth: 420, flex: 1 }}>
                 <ResultViewer result={result} loading={loading} />
               </Box>
             </Box>
