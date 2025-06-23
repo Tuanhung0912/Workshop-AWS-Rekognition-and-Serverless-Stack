@@ -1,12 +1,49 @@
-# React + Vite
+# AI Vision Lab - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Đây là giao diện frontend cho dự án AI Vision Lab, cho phép người dùng upload ảnh và xem kết quả phân tích AI.
 
-Currently, two official plugins are available:
+## 🚀 Hướng dẫn cài đặt & khởi chạy
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1. Clone project về máy
+```bash
+git clone https://github.com/<your-username>/rekognition-frontend.git
+cd rekognition-frontend
+```
 
-## Expanding the ESLint configuration
+### 2. Cài đặt dependencies
+Bạn cần cài đặt [Node.js](https://nodejs.org/) (khuyến nghị >= 16).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+```
+
+### 3. Khởi chạy project
+```bash
+npm run dev
+```
+
+Sau đó, mở trình duyệt và truy cập địa chỉ được in ra (thường là http://localhost:5173).
+
+---
+
+## 📝 Một số lệnh hữu ích
+- **Build production:**
+  ```bash
+  npm run build
+  ```
+- **Preview production build:**
+  ```bash
+  npm run preview
+  ```
+
+## 📦 Công nghệ sử dụng
+- React + Vite
+- Material UI
+
+## 📄 Thông tin thêm
+- Nếu gặp lỗi về cổng (port) hoặc quyền truy cập, hãy kiểm tra lại firewall hoặc thử đổi port.
+- Nếu muốn kết nối với backend, hãy chỉnh sửa endpoint API trong file `src/App.jsx`.
+
+---
+
+> © 2024 AI Vision Lab. All rights reserved.
