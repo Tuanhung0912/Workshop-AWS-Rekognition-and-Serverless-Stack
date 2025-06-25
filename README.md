@@ -5,19 +5,52 @@
 ## 🚀 Hướng dẫn cài đặt & khởi chạy
 
 ### 1. Clone project về máy
+Sử dụng terminal và chạy các lệnh sau:
 ```bash
 git clone https://github.com/<your-username>/rekognition-frontend.git
 cd rekognition-frontend
 ```
 
-### 2. Cài đặt dependencies
-Bạn cần cài đặt [Node.js](https://nodejs.org/) (khuyến nghị >= 16).
+### 2. Cài đặt Node.js (nên dùng Node.js >= 16)
+Bạn có thể tải trực tiếp từ [Node.js](https://nodejs.org/) hoặc cài qua terminal:
 
+#### a. Dùng nvm (khuyên dùng)
+- **Trên Windows:**
+  - Tải [nvm-windows](https://github.com/coreybutler/nvm-windows/releases), cài đặt và mở terminal:
+    ```bash
+    nvm install 18
+    nvm use 18
+    ```
+- **Trên macOS/Linux:**
+    ```bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+    # Đóng/mở lại terminal, sau đó:
+    nvm install 18
+    nvm use 18
+    ```
+
+Kiểm tra phiên bản:
+```bash
+node -v
+npm -v
+```
+
+### 3. Cài đặt dependencies
 ```bash
 npm install
 ```
 
-### 3. Khởi chạy project
+### 4. Cập nhật Vite (nếu cần)
+Bạn có thể cập nhật Vite lên phiên bản mới nhất bằng lệnh:
+```bash
+npm install vite@latest --save-dev
+```
+Hoặc nếu dùng yarn:
+```bash
+yarn add vite@latest --dev
+```
+
+### 5. Khởi chạy project
 ```bash
 npm run dev
 ```
