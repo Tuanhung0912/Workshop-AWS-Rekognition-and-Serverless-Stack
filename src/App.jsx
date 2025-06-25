@@ -17,7 +17,7 @@ import {
   Paper,
   useMediaQuery,
 } from '@mui/material'
-import { CloudUpload, Delete, Upload, RestartAlt } from '@mui/icons-material'
+import { CloudUpload, Delete, Upload, RestartAlt, Search } from '@mui/icons-material'
 import { styled } from '@mui/material/styles'
 import ResultViewer from './components/ResultViewer'
 import Header from './components/Header'
@@ -126,6 +126,9 @@ const AppContent = () => {
   const [error, setError] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
   const [leftHeight, setLeftHeight] = useState(undefined);
+  const [uploadingS3, setUploadingS3] = useState(false);
+  const [s3Success, setS3Success] = useState(false);
+  const [s3Error, setS3Error] = useState(null);
   const leftBoxRef = useRef();
 
   useEffect(() => {
@@ -199,6 +202,27 @@ const AppContent = () => {
     setResult(null)
     setError(null)
   }
+
+  const handleUploadToS3 = async () => {
+    if (!image || !result) return;
+    setUploadingS3(true);
+    setS3Error(null);
+    setS3Success(false);
+
+    const formData = new FormData();
+    formData.append('file', image);
+    formData.append('result', JSON.stringify(result));
+
+    try {
+      // Thay URL này bằng endpoint backend của bạn
+      await axios.post('https://your-backend/upload-to-s3', formData);
+      setS3Success(true);
+    } catch (err) {
+      setS3Error('Upload to S3 failed. Please try again.');
+    } finally {
+      setUploadingS3(false);
+    }
+  };
 
   // Responsive: stack vertically on mobile, side by side on desktop
   const showSideBySide = !!preview && !isMobile;
@@ -280,33 +304,99 @@ const AppContent = () => {
                       maxWidth: '100%',
                     }}
                   />
-                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ width: '100%' }}>
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{
+                    width: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    mt: 2,
+                    mb: 1,
+                  }}>
                     <Button
                       variant="contained"
-                      color="primary"
                       onClick={handleUpload}
-                      startIcon={<CloudUpload />}
+                      startIcon={<Search />}
                       disabled={loading}
                       fullWidth
+                      sx={{
+                        background: 'linear-gradient(90deg, #3b82f6 0%, #6366f1 100%)',
+                        color: 'white',
+                        borderRadius: 3,
+                        fontWeight: 600,
+                        boxShadow: 3,
+                        textTransform: 'none',
+                        fontSize: '1rem',
+                        '&:hover': {
+                          background: 'linear-gradient(90deg, #2563eb 0%, #7c3aed 100%)',
+                          boxShadow: 6,
+                        },
+                      }}
                     >
                       {loading ? 'Analyzing...' : 'Analyze Image'}
                     </Button>
                     <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={handleClear}
-                      startIcon={<Delete />}
+                      variant="contained"
+                      onClick={handleUploadToS3}
+                      startIcon={<CloudUpload />}
+                      disabled={uploadingS3}
                       fullWidth
+                      sx={{
+                        background: 'linear-gradient(90deg, #22c55e 0%, #4ade80 100%)',
+                        color: 'white',
+                        borderRadius: 3,
+                        fontWeight: 600,
+                        boxShadow: 3,
+                        textTransform: 'none',
+                        fontSize: '1rem',
+                        '&:hover': {
+                          background: 'linear-gradient(90deg, #16a34a 0%, #22d3ee 100%)',
+                          boxShadow: 6,
+                        },
+                      }}
                     >
-                      Remove
+                      {uploadingS3 ? 'Uploading...' : 'Upload to S3'}
                     </Button>
                   </Stack>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={handleClear}
+                    startIcon={<Delete />}
+                    fullWidth
+                    sx={{
+                      borderRadius: 3,
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      borderWidth: 2,
+                      borderColor: '#ef4444',
+                      color: '#ef4444',
+                      background: 'rgba(239,68,68,0.08)',
+                      mb: 1,
+                      '&:hover': {
+                        background: '#ef4444',
+                        color: 'white',
+                        borderColor: '#ef4444',
+                      },
+                    }}
+                  >
+                    Remove
+                  </Button>
                   <Button
                     component="label"
                     variant="text"
                     color="secondary"
                     startIcon={<RestartAlt />}
-                    sx={{ mt: 2, fontWeight: 500 }}
+                    sx={{
+                      mt: 2,
+                      fontWeight: 500,
+                      color: '#38bdf8',
+                      textTransform: 'none',
+                      fontSize: '1rem',
+                      '&:hover': {
+                        color: '#0ea5e9',
+                        textDecoration: 'underline',
+                        background: 'transparent',
+                      },
+                    }}
                   >
                     Choose another image
                     <VisuallyHiddenInput type="file" accept="image/*" onChange={handleChange} />
@@ -396,6 +486,46 @@ const AppContent = () => {
             }}
           >
             {error}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={!!s3Success}
+          autoHideDuration={4000}
+          onClose={() => setS3Success(false)}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: isMobile ? 'center' : 'right'
+          }}
+        >
+          <Alert
+            severity="success"
+            onClose={() => setS3Success(false)}
+            sx={{
+              bgcolor: theme.palette.mode === 'dark' ? 'success.dark' : 'success.light',
+              color: theme.palette.mode === 'dark' ? 'white' : 'success.dark',
+            }}
+          >
+            Upload to S3 successful!
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={!!s3Error}
+          autoHideDuration={6000}
+          onClose={() => setS3Error(null)}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: isMobile ? 'center' : 'right'
+          }}
+        >
+          <Alert
+            severity="error"
+            onClose={() => setS3Error(null)}
+            sx={{
+              bgcolor: theme.palette.mode === 'dark' ? 'error.dark' : 'error.light',
+              color: theme.palette.mode === 'dark' ? 'white' : 'error.dark',
+            }}
+          >
+            {s3Error}
           </Alert>
         </Snackbar>
         <Footer />
