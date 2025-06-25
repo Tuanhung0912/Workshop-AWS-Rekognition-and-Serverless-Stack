@@ -204,14 +204,13 @@ const AppContent = () => {
   }
 
   const handleUploadToS3 = async () => {
-    if (!image || !result) return;
+    if (!image) return;
     setUploadingS3(true);
     setS3Error(null);
     setS3Success(false);
 
     const formData = new FormData();
     formData.append('file', image);
-    formData.append('result', JSON.stringify(result));
 
     try {
       // Thay URL này bằng endpoint backend của bạn
