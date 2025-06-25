@@ -47,7 +47,7 @@ const Header = () => {
               fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
-            AI Vision Lab
+            Simple Image Reconition Lab
           </Typography>
         </Box>
 

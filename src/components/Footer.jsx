@@ -18,7 +18,7 @@ const Footer = () => {
       }}
     >
       <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.main', mb: 0.5 }}>
-        AI Vision Lab
+        Simple Image Reconition Lab
       </Typography>
       <Stack direction="row" spacing={1} justifyContent="center" sx={{ mb: 1 }}>
         <IconButton component={Link} href="https://github.com/" target="_blank" rel="noopener" color="primary">
@@ -32,7 +32,7 @@ const Footer = () => {
         </IconButton>
       </Stack>
       <Typography variant="body2" color="text.secondary">
-        © {new Date().getFullYear()} AI Vision Lab. All rights reserved.
+        © {new Date().getFullYear()} Simple Image Reconition Lab. All rights reserved.
       </Typography>
     </Box>
   );
