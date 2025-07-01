@@ -4,50 +4,41 @@
 
 ## 🚀 Hướng dẫn cài đặt & khởi chạy
 
-### 1. Clone project về máy
-Sử dụng terminal và chạy các lệnh sau:
-```bash
-git clone https://github.com/<your-username>/rekognition-frontend.git
-cd rekognition-frontend
-```
+### 1. Cài đặt Node.js (nên dùng Node.js >= 16)
+Bạn cần tải và cài đặt Node.js trực tiếp từ trang chủ:
+- Truy cập: [https://nodejs.org/](https://nodejs.org/)
+- Tải bản LTS phù hợp với hệ điều hành của bạn và tiến hành cài đặt.
 
-### 2. Cài đặt Node.js (nên dùng Node.js >= 16)
-Bạn có thể tải trực tiếp từ [Node.js](https://nodejs.org/) hoặc cài qua terminal:
-
-#### a. Dùng nvm (khuyên dùng)
-- **Trên Windows:**
-  - Tải [nvm-windows](https://github.com/coreybutler/nvm-windows/releases), cài đặt và mở terminal:
-    ```bash
-    nvm install 18
-    nvm use 18
-    ```
-- **Trên macOS/Linux:**
-    ```bash
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-    # Đóng/mở lại terminal, sau đó:
-    nvm install 18
-    nvm use 18
-    ```
-
-Kiểm tra phiên bản:
+Kiểm tra phiên bản sau khi cài đặt:
 ```bash
 node -v
 npm -v
 ```
 
-### 3. Cài đặt dependencies
+### 2. Cài đặt dependencies
 ```bash
 npm install
 ```
 
-### 4. Cập nhật Vite (nếu cần)
-Bạn có thể cập nhật Vite lên phiên bản mới nhất bằng lệnh:
+### 3. Cài đặt và cập nhật Vite
+- Nếu bạn chưa có Vite toàn cục, cài đặt bằng lệnh:
+```bash
+npm install -g vite
+```
+- Để cập nhật Vite lên phiên bản mới nhất trong project:
 ```bash
 npm install vite@latest --save-dev
 ```
 Hoặc nếu dùng yarn:
 ```bash
 yarn add vite@latest --dev
+```
+
+### 4. Cập nhật Node.js khi clone code về (nếu cần)
+Nếu gặp lỗi do phiên bản Node.js quá thấp, hãy cập nhật Node.js lên bản mới nhất từ [https://nodejs.org/](https://nodejs.org/), sau đó kiểm tra lại:
+```bash
+node -v
+npm -v
 ```
 
 ### 5. Khởi chạy project
