@@ -129,6 +129,7 @@ const AppContent = () => {
   const [uploadingS3, setUploadingS3] = useState(false);
   const [s3Success, setS3Success] = useState(false);
   const [s3Error, setS3Error] = useState(null);
+
   const leftBoxRef = useRef();
 
   useEffect(() => {
@@ -176,25 +177,38 @@ const AppContent = () => {
     setIsDragging(false)
   }
 
-  const handleUpload = async () => {
-    if (!image) return
-
-    setLoading(true)
-    setError(null)
-
-    const formData = new FormData()
-    formData.append('file', image)
-
-    try {
-      const res = await axios.post('https://httpbin.org/post', formData)
-      setResult(res.data)
-    } catch (error) {
-      setError('Upload failed. Please try again.')
-      console.error('Upload failed:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const handleAnalyzeImage = async () => {
+    if (!image) return;
+  
+    setLoading(true);
+    setError(null);
+  
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64String = reader.result.split(',')[1]; // chỉ lấy phần base64
+  
+      try {
+        const res = await axios.post(
+          'API-URL-TO-ANALYZE-IMAGE', // Dán đường link API Gateway của bạn vào đây
+          { image: base64String }, // gửi JSON
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        setResult(res.data);
+      } catch (error) {
+        setError('Upload failed. Please try again.');
+        console.error('Upload failed:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    reader.readAsDataURL(image); // chuyển ảnh thành base64
+  };
+  
 
   const handleClear = () => {
     setImage(null)
@@ -202,27 +216,47 @@ const AppContent = () => {
     setResult(null)
     setError(null)
   }
+  
 
   const handleUploadToS3 = async () => {
     if (!image || !result) return;
+  
     setUploadingS3(true);
     setS3Error(null);
     setS3Success(false);
-
-    const formData = new FormData();
-    formData.append('file', image);
-    formData.append('result', JSON.stringify(result));
-
-    try {
-      // Thay URL này bằng endpoint backend của bạn
-      await axios.post('https://your-backend/upload-to-s3', formData);
-      setS3Success(true);
-    } catch (err) {
-      setS3Error('Upload to S3 failed. Please try again.');
-    } finally {
-      setUploadingS3(false);
-    }
+  
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64Image = reader.result.split(',')[1]; // lấy phần sau "data:image/jpeg;base64,..."
+  
+      try {
+        const res = await axios.post(
+          'API-URL-TO-UPLOAD-TO-S3', // Dán đường link API Gateway của bạn vào đây
+          {
+            image: base64Image,
+            result: result
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+  
+        console.log("Uploaded:", res.data);
+        setS3Success(true);
+      } catch (err) {
+        setS3Error('Upload to S3 failed. Please try again.');
+        console.error(err);
+      } finally {
+        setUploadingS3(false);
+      }
+    };
+  
+    reader.readAsDataURL(image); // bắt đầu đọc ảnh -> base64
   };
+  
+  
 
   // Responsive: stack vertically on mobile, side by side on desktop
   const showSideBySide = !!preview && !isMobile;
@@ -313,7 +347,7 @@ const AppContent = () => {
                   }}>
                     <Button
                       variant="contained"
-                      onClick={handleUpload}
+                      onClick={handleAnalyzeImage}
                       startIcon={<Search />}
                       disabled={loading}
                       fullWidth
